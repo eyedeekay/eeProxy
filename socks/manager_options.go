@@ -40,7 +40,7 @@ func SetPort(v string) func(*Manager) error {
 }
 
 //SetSocksHost sets the host of the client's SAM bridge
-func SetHost(s string) func(*Manager) error {
+func SetSocksHost(s string) func(*Manager) error {
 	return func(c *Manager) error {
 		c.host = s
 		return nil
@@ -48,7 +48,7 @@ func SetHost(s string) func(*Manager) error {
 }
 
 //SetSocksPort sets the port of the client's SAM bridge
-func SetPort(v string) func(*Manager) error {
+func SetSocksPort(v string) func(*Manager) error {
 	return func(c *Manager) error {
 		port, err := strconv.Atoi(v)
 		if err != nil {
