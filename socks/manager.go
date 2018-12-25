@@ -28,7 +28,7 @@ type Manager struct {
 }
 
 func (m Manager) Serve() error {
-	server, err := socks5.New(m.Config)
+	server, err := socks5.New(&m.Config)
 	if err != nil {
 		return err
 	}
