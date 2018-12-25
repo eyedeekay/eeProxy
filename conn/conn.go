@@ -1,11 +1,13 @@
 package conn
 
 import (
-	//"os"
+	"bufio"
 	"github.com/eyedeekay/sam3"
+	"os"
 )
 
 type Conn struct {
+	*sam3.SAM
 	sam3.I2PKeys
 	*sam3.StreamSession
 	*sam3.SAMConn
@@ -16,19 +18,32 @@ func (c Conn) FindKeys() bool {
 	return false
 }
 
-func (c Conn) SaveKeys() (*sam3.I2PKeys, error) {
-	c.I2PKeys, err = sam.NewKeys()
+func (c Conn) SaveKeys() (sam3.I2PKeys, error) {
+	var err error
+	c.I2PKeys, err = c.SAM.NewKeys()
 	if err != nil {
-		return nil, err
+		return sam3.I2PKeys{}, err
 	}
-	return &c.I2PKeys, nil
+	f, err := os.Create(c.path)
+	if err != nil {
+		return sam3.I2PKeys{}, err
+	}
+	defer f.Close()
+	filewriter := bufio.NewWriter(f)
+	err = sam3.StoreKeysIncompat(c.I2PKeys, filewriter)
+	if err != nil {
+		return sam3.I2PKeys{}, err
+	}
+	filewriter.Flush()
+	return c.I2PKeys, nil
 }
 
-func (c Conn) LoadKeys() (*sam3.I2PKeys, error) {
-	return &c.I2PKeys, nil
+func (c Conn) LoadKeys() (sam3.I2PKeys, error) {
+	//sam3.LoadKeysIncompat(filereader)
+	return c.I2PKeys, nil
 }
 
-func (c Conn) Keys() (*sam3.I2PKeys, error) {
+func (c Conn) Keys() (sam3.I2PKeys, error) {
 	if c.FindKeys() {
 		return c.LoadKeys()
 	}
@@ -48,6 +63,7 @@ func (m Conn) Cleanup() error {
 func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	var c Conn
 	var err error
+	c.SAM = sam
 	c.path = path + addr + ".i2pkeys"
 	c.I2PKeys, err = c.Keys()
 	if err != nil {
