@@ -77,7 +77,7 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 	if err != nil {
 		return nil, err
 	}
-	if r, err := resolver.NewResolver(); err == nil {
+	if r, err := resolver.NewResolver(m.samhost, m.samport); err == nil {
 		m.Config = socks5.Config{
 			Resolver: r,
 			Dial:     m.Dial,

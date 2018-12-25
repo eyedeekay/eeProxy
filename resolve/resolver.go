@@ -13,6 +13,8 @@ import (
 
 type Resolver struct {
 	*sam3.SAMResolver
+	samhost         string
+	samport         string
 	allowedSuffixes []string
 }
 
@@ -47,13 +49,20 @@ func (r Resolver) ValidateI2PAddr(name string) bool {
 	return noi2p
 }
 
-func NewResolver() (*Resolver, error) {
-	return NewResolverFromOptions()
+func NewResolver(samhost, samport string) (*Resolver, error) {
+	return NewResolverFromOptions(SetHost(samhost), SetPort(samport))
 }
 
-func NewResolverFromOptions() (*Resolver, error) {
+func NewResolverFromOptions(opts ...func(*Resolver) error) (*Resolver, error) {
 	var r Resolver
 	r.allowedSuffixes = []string{".i2p", ".b32.i2p"}
+	r.samhost = "127.0.0.1"
+	r.samport = "7656"
+	for _, o := range opts {
+		if err := o(&r); err != nil {
+			return nil, err
+		}
+	}
 	var err error
 	r.SAMResolver, err = sam3.NewFullSAMResolver("127.0.0.1:7656")
 	if err != nil {
