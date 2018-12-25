@@ -64,6 +64,11 @@ func NewManager(samhost, samport, datadir string, samopts []string) (*Manager, e
 
 func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 	var m Manager
+	for _, o := range opts {
+		if err := o(&m); err != nil {
+			return nil, err
+		}
+	}
 	if r, err := resolver.NewResolver(); err == nil {
 		m.Config = socks5.Config{
 			Resolver: r,
