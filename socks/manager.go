@@ -8,6 +8,7 @@ import (
 )
 
 import (
+	"../conn"
 	"github.com/eyedeekay/eeproxy/resolve"
 	"github.com/eyedeekay/go-socks5"
 	"github.com/eyedeekay/sam3"
@@ -17,7 +18,8 @@ type Manager struct {
 	resolver.Resolver
 	socks5.Config
 	sam3.StreamSession
-	conns []*sam3.SAMConn
+	conns    []*conn.Conn
+	datapath string
 }
 
 func (m Manager) Serve() error {
@@ -32,16 +34,16 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 	for i, c := range m.conns {
 		if i2paddr.Base32() == c.RemoteAddr().(*sam3.I2PAddr).Base32() {
 			log.Println("Found destination for address:", i2paddr.Base32(), "at position", i)
-			return c, nil
+			return c.SAMConn, nil
 		}
 	}
 	newconn, err := m.StreamSession.DialI2P(i2paddr)
 	if err != nil {
 		return nil, err
 	}
-	m.conns = append(m.conns, newconn)
+	m.conns = append(m.conns, conn.GenConn(newconn, m.datapath))
 	log.Println("Generated destination for address:", i2paddr.Base32(), "at position", len(m.conns)-1)
-	return m.conns[len(m.conns)-1], nil
+	return m.conns[len(m.conns)-1].SAMConn, nil
 }
 
 func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, error) {

@@ -3,7 +3,8 @@ package main
 import (
 	"flag"
 	//"log"
-	"github.com/eyedeekay/eeproxy/socks"
+	"./socks"
+	//"github.com/eyedeekay/eeproxy/socks"
 	"os"
 	"os/signal"
 	"strings"
@@ -52,9 +53,9 @@ var (
 		"Target host(Host of service to forward to i2p)")
 	targetPort = flag.String("p", "8081",
 		"Target port(Port of service to forward to i2p)")
-	reduceIdle = flag.Bool("r", false,
+	reduceIdle = flag.Bool("r", true,
 		"Reduce tunnel quantity when idle(true or false)")
-	closeIdle = flag.Bool("x", false,
+	closeIdle = flag.Bool("x", true,
 		"Close tunnel idle(true or false)")
 	targetDir = flag.String("d", "./tunnels/",
 		"Directory to save tunnel configuration file in.")
@@ -136,7 +137,7 @@ func main() {
 	config.ReduceIdle = config.GetReduceOnIdle(*reduceIdle, true)
 	config.ReduceIdleTime = config.GetReduceIdleTime(*reduceIdleTime, 600000)
 	config.ReduceIdleQuantity = config.GetReduceIdleQuantity(*reduceIdleQuantity, 2)
-	config.CloseIdle = config.GetCloseOnIdle(*closeIdle, false)
+	config.CloseIdle = config.GetCloseOnIdle(*closeIdle, true)
 	config.CloseIdleTime = config.GetCloseIdleTime(*closeIdleTime, 600000)
 	config.KeyFilePath = config.GetKeyFile(*encryptKeyFiles, "")
 	config.ClientDest = config.GetClientDest(*targetDest, "", "")
