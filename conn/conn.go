@@ -50,7 +50,7 @@ func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	}
 	c.path = path + c.I2PKeys.Addr().Base32() + ".i2pkeys"
 	c.SaveKeys()
-	c.StreamSession, err = sam.NewStreamSession("stream_example", c.I2PKeys, sam3.Options_Small)
+	c.StreamSession, err = sam.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10], c.I2PKeys, sam3.Options_Small)
 	if err != nil {
 		return nil, err
 	}
