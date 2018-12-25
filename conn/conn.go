@@ -64,11 +64,3 @@ func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	}
 	return &c, nil
 }
-
-func GenConn(sam *sam3.SAM, addr, path string, opts []string) *Conn {
-	c, err := NewConn(sam, addr, path, opts)
-	if err != nil {
-		panic(err)
-	}
-	return c
-}
