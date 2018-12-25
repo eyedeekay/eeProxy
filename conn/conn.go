@@ -6,20 +6,51 @@ import (
 )
 
 type Conn struct {
+	sam3.I2PKeys
+	*sam3.StreamSession
 	*sam3.SAMConn
 	path string
 }
 
-func (c Conn) SaveKeys() {
-
+func (c Conn) FindKeys() bool {
+	return true
 }
 
-func NewConn(conn *sam3.SAMConn, path string) (*Conn, error) {
-	return GenConn(conn, path), nil
+func (c Conn) SaveKeys() (*sam3.I2PKeys, error) {
+	return &c.I2PKeys, nil
 }
 
-func GenConn(conn *sam3.SAMConn, path string) *Conn {
-	var c = Conn{SAMConn: conn, path: path}
+func (c Conn) LoadKeys() (*sam3.I2PKeys, error) {
+	return &c.I2PKeys, nil
+}
+
+func (c Conn) Keys() (*sam3.I2PKeys, error) {
+	if c.FindKeys() {
+		return c.LoadKeys()
+	}
+	return c.SaveKeys()
+}
+
+func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
+	var c Conn
+	var err error
+	c.I2PKeys, err = sam.NewKeys()
+	if err != nil {
+		return nil, err
+	}
+	c.path = path + c.I2PKeys.Addr().Base32()
 	c.SaveKeys()
-	return &c
+	c.StreamSession, err = sam.NewStreamSession("stream_example", c.I2PKeys, sam3.Options_Small)
+	if err != nil {
+		return nil, err
+	}
+	return &c, nil
+}
+
+func GenConn(sam *sam3.SAM, addr, path string, opts []string) *Conn {
+	c, err := NewConn(sam, addr, path, opts)
+	if err != nil {
+		panic(err)
+	}
+	return c
 }

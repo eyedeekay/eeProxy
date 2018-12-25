@@ -43,7 +43,9 @@ func SetPort(v string) func(*Manager) error {
 func SetSAMOpts(s []string) func(*Manager) error {
 	return func(c *Manager) error {
 		for _, i := range s {
-			c.samopts += i + " "
+			if i != "" {
+				c.samopts = append(c.samopts, i)
+			}
 		}
 		return nil
 	}

@@ -17,12 +17,12 @@ import (
 type Manager struct {
 	resolver.Resolver
 	socks5.Config
-	sam3.StreamSession
+	*sam3.SAM
 	conns   []*conn.Conn
 	datadir string
 	samhost string
 	samport string
-	samopts string
+	samopts []string
 }
 
 func (m Manager) Serve() error {
@@ -40,11 +40,11 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 			return c.SAMConn, nil
 		}
 	}
-	newconn, err := m.StreamSession.DialI2P(i2paddr)
+	newconn, err := conn.NewConn(m.SAM, addr, m.datadir, m.samopts)
 	if err != nil {
 		return nil, err
 	}
-	m.conns = append(m.conns, conn.GenConn(newconn, m.datadir))
+	m.conns = append(m.conns, newconn)
 	log.Println("Generated destination for address:", i2paddr.Base32(), "at position", len(m.conns)-1)
 	return m.conns[len(m.conns)-1].SAMConn, nil
 }
