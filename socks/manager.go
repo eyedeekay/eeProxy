@@ -75,7 +75,7 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 	var m Manager
 	m.samhost = "127.0.0.1"
 	m.samport = "7656"
-	m.datadir = "./files"
+	m.datadir = "./tunnels/"
 	for _, o := range opts {
 		if err := o(&m); err != nil {
 			return nil, err
