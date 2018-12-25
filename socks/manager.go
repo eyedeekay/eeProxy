@@ -68,6 +68,7 @@ func (m Manager) Cleanup() error {
 			return err
 		}
 	}
+	return nil
 }
 
 func NewManager(host, port, samhost, samport, datadir string, samopts []string) (*Manager, error) {
