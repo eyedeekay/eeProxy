@@ -64,10 +64,18 @@ func NewManager(samhost, samport, datadir string, samopts []string) (*Manager, e
 
 func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 	var m Manager
+	m.samhost = "127.0.0.1"
+	m.samport = "7656"
+	m.datadir = "./files"
 	for _, o := range opts {
 		if err := o(&m); err != nil {
 			return nil, err
 		}
+	}
+	var err error
+	m.SAM, err = sam3.NewSAM(m.samhost + ":" + m.samport)
+	if err != nil {
+		return nil, err
 	}
 	if r, err := resolver.NewResolver(); err == nil {
 		m.Config = socks5.Config{
