@@ -22,7 +22,7 @@ type Conn struct {
 func (c Conn) FindKeys() bool {
 	if _, err := os.Stat(c.Path()); os.IsNotExist(err) {
 		if _, err := os.Stat(c.path); os.IsNotExist(err) {
-			os.MkdirAll(c.path, os.ModeDir)
+			os.MkdirAll(c.path, 0755)
 		}
 		return false
 	}
