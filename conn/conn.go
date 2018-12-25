@@ -38,13 +38,17 @@ func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.path = path + c.I2PKeys.Addr().Base32()
+	c.path = path + c.I2PKeys.Addr().Base32() + ".i2pkeys"
 	c.SaveKeys()
 	c.StreamSession, err = sam.NewStreamSession("stream_example", c.I2PKeys, sam3.Options_Small)
 	if err != nil {
 		return nil, err
 	}
-	c.SAMConn, err = c.StreamSession.DialI2P(addr)
+	i2paddr, err := sam.Lookup(addr)
+	if err != nil {
+		return nil, err
+	}
+	c.SAMConn, err = c.StreamSession.DialI2P(i2paddr)
 	if err != nil {
 		return nil, err
 	}
