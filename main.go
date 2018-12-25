@@ -8,9 +8,8 @@ import (
 )
 
 import (
-	"github.com/eyedeekay/sam-forwarder/config"
-	//"github.com/eyedeekay/samcatd-web"
 	"github.com/eyedeekay/eeproxy/socks"
+	"github.com/eyedeekay/sam-forwarder/config"
 )
 
 type flagOpts []string
@@ -138,7 +137,7 @@ func main() {
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-	if tunsocks, tunerr := tunmanager.NewManager(config.SamHost, config.SamPort, config.Print(), config.SaveDirectory); tunerr == nil {
+	if tunsocks, tunerr := tunmanager.NewManager(config.SamHost, config.SamPort, config.SaveDirectory, config.Print()); tunerr == nil {
 		go func() {
 			for sig := range c {
 				if sig == os.Interrupt {

@@ -40,9 +40,11 @@ func SetPort(v string) func(*Manager) error {
 }
 
 //SetSAMOpts sets the SAM options
-func SetSAMOpts(s string) func(*Manager) error {
+func SetSAMOpts(s []string) func(*Manager) error {
 	return func(c *Manager) error {
-		c.samopts = s
+		for _, i := range s {
+			c.samopts += i + " "
+		}
 		return nil
 	}
 }

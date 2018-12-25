@@ -53,12 +53,12 @@ func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, erro
 	return m.DialI2P(ctx, addr)
 }
 
-func NewManager(samhost, samport, samopts, datadir string) (*Manager, error) {
+func NewManager(samhost, samport, datadir string, samopts []string) (*Manager, error) {
 	return NewManagerFromOptions(
 		SetHost(samhost),
 		SetPort(samport),
-		SetSAMOpts(samopts),
 		SetDataDir(datadir),
+		SetSAMOpts(samopts),
 	)
 }
 
