@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"os"
 	"os/signal"
 	"strings"
@@ -141,7 +142,9 @@ func main() {
 		go func() {
 			for sig := range c {
 				if sig == os.Interrupt {
-					//tunsocks.Cleanup()
+					if err := tunsocks.Cleanup(); nil {
+						log.Println(err.Error())
+					}
 				}
 			}
 		}()
@@ -149,5 +152,4 @@ func main() {
 	} else {
 		panic(tunerr)
 	}
-
 }

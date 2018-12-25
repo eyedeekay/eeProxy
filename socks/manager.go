@@ -53,6 +53,15 @@ func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, erro
 	return m.DialI2P(ctx, addr)
 }
 
+func (m Manager) Cleanup() error {
+	for _, c := range m.conns {
+		if err := c.Cleanup(); err != nil {
+			return err
+		}
+	}
+	return m.SAM.Close()
+}
+
 func NewManager(samhost, samport, datadir string, samopts []string) (*Manager, error) {
 	return NewManagerFromOptions(
 		SetHost(samhost),

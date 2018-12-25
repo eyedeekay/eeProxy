@@ -33,6 +33,10 @@ func (r Resolver) ResolveI2P(ctx context.Context, name string) (context.Context,
 	return ctx, &raddr, nil
 }
 
+func (r Resolver) Cleanup() error {
+	return r.SAMResolver.SAM.Close()
+}
+
 func (r Resolver) ValidateI2PAddr(name string) bool {
 	noi2p := false
 	for _, suffix := range r.allowedSuffixes {

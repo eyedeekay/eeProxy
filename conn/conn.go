@@ -31,6 +31,16 @@ func (c Conn) Keys() (*sam3.I2PKeys, error) {
 	return c.SaveKeys()
 }
 
+func (m Conn) Cleanup() error {
+	if err := m.SAMConn.Close(); err != nil {
+		return err
+	}
+	if err := m.StreamSession.Close(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	var c Conn
 	var err error
