@@ -49,7 +49,7 @@ var (
 		"Uze gzip(true or false)")
 	targetHost = flag.String("h", "127.0.0.1",
 		"Target host(Host of service to forward to i2p)")
-	targetPort = flag.String("p", "8081",
+	targetPort = flag.String("p", "7950",
 		"Target port(Port of service to forward to i2p)")
 	reduceIdle = flag.Bool("r", true,
 		"Reduce tunnel quantity when idle(true or false)")
@@ -111,7 +111,7 @@ func main() {
 		*startUp = true
 	}
 	config.TargetHost = config.GetHost(*targetHost, "127.0.0.1")
-	config.TargetPort = config.GetPort(*targetPort, "8081")
+	config.TargetPort = config.GetPort(*targetPort, "7950")
 	config.SaveFile = config.GetSaveFile(true, true)
 	config.SaveDirectory = config.GetDir(*targetDir, "./tunnels/")
 	config.SamHost = config.GetSAMHost(*samHost, "127.0.0.1")
