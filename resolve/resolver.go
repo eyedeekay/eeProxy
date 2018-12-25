@@ -3,6 +3,7 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"log"
 	"net"
 	"strings"
 )
