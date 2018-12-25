@@ -77,9 +77,9 @@ func (c Conn) Keys() (sam3.I2PKeys, error) {
 }
 
 func (m Conn) Cleanup() error {
-	if err := m.SAMConn.Close(); err != nil {
-		return err
-	}
+	//if err := m.SAMConn.Close(); err != nil {
+	//return err
+	//}
 	//if err := m.StreamSession.Close(); err != nil {
 	//return err
 	//}
