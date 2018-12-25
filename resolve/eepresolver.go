@@ -36,7 +36,7 @@ func (r Resolver) ValidateI2PAddr(name string) bool {
 	for _, suffix := range r.allowedSuffixes {
 		if strings.HasSuffix(name, suffix) {
 			if suffix == ".b32.i2p" {
-				if len(name) != 52 {
+				if len(name) != 60 {
 					noi2p = true
 					break
 				}
