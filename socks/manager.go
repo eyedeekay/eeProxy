@@ -94,7 +94,7 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 			return nil, err
 		}
 	}
-    log.Println("preparing SAM-multiplexing SOCKS proxy on", m.host, m.port, "->" m.samhost, m.samport)
+	log.Println("preparing SAM-multiplexing SOCKS proxy on", m.host, m.port, "->", m.samhost, m.samport)
 	var err error
 	m.SAM, err = sam3.NewSAM(m.samhost + ":" + m.samport)
 	if err != nil {
