@@ -68,7 +68,6 @@ func (m Manager) Cleanup() error {
 			return err
 		}
 	}
-	return m.SAM.Close()
 }
 
 func NewManager(host, port, samhost, samport, datadir string, samopts []string) (*Manager, error) {
