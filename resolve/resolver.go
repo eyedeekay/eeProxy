@@ -67,6 +67,7 @@ func NewResolverFromOptions(opts ...func(*Resolver) error) (*Resolver, error) {
 			return nil, err
 		}
 	}
+	log.Println("Preparing i2p address resolver")
 	var err error
 	r.SAMResolver, err = sam3.NewFullSAMResolver("127.0.0.1:7656")
 	if err != nil {
