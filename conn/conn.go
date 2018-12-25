@@ -13,10 +13,14 @@ type Conn struct {
 }
 
 func (c Conn) FindKeys() bool {
-	return true
+	return false
 }
 
 func (c Conn) SaveKeys() (*sam3.I2PKeys, error) {
+	c.I2PKeys, err = sam.NewKeys()
+	if err != nil {
+		return nil, err
+	}
 	return &c.I2PKeys, nil
 }
 
@@ -44,12 +48,11 @@ func (m Conn) Cleanup() error {
 func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	var c Conn
 	var err error
-	c.I2PKeys, err = sam.NewKeys()
+	c.path = path + addr + ".i2pkeys"
+	c.I2PKeys, err = c.Keys()
 	if err != nil {
 		return nil, err
 	}
-	c.path = path + c.I2PKeys.Addr().Base32() + ".i2pkeys"
-	c.SaveKeys()
 	c.StreamSession, err = sam.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10], c.I2PKeys, opts)
 	if err != nil {
 		return nil, err
