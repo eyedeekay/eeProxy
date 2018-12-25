@@ -2,9 +2,6 @@ package main
 
 import (
 	"flag"
-	//"log"
-	"./socks"
-	//"github.com/eyedeekay/eeproxy/socks"
 	"os"
 	"os/signal"
 	"strings"
@@ -12,7 +9,8 @@ import (
 
 import (
 	"github.com/eyedeekay/sam-forwarder/config"
-	"github.com/eyedeekay/samcatd-web"
+	//"github.com/eyedeekay/samcatd-web"
+	"github.com/eyedeekay/eeproxy/socks"
 )
 
 type flagOpts []string
@@ -95,15 +93,11 @@ var (
 )
 
 var (
-	webinterface    *samcatweb.SAMWebConfig
-	webinterfaceerr error
-	err             error
-	accessList      flagOpts
-	config          *i2ptunconf.Conf
+	err    error
+	config *i2ptunconf.Conf
 )
 
 func main() {
-	flag.Var(&accessList, "accesslist", "Specify an access list member(can be used multiple times)")
 	flag.Parse()
 
 	if *readKeys != "" {
@@ -144,7 +138,7 @@ func main() {
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-	if tunsocks, tunerr := tunmanager.NewManager(); tunerr == nil {
+	if tunsocks, tunerr := tunmanager.NewManager(config.SamHost, config.SamPort, config.Print(), config.SaveDirectory); tunerr == nil {
 		go func() {
 			for sig := range c {
 				if sig == os.Interrupt {

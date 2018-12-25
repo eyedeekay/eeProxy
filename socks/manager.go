@@ -18,8 +18,11 @@ type Manager struct {
 	resolver.Resolver
 	socks5.Config
 	sam3.StreamSession
-	conns    []*conn.Conn
-	datapath string
+	conns   []*conn.Conn
+	datadir string
+	samhost string
+	samport string
+	samopts string
 }
 
 func (m Manager) Serve() error {
@@ -41,7 +44,7 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 	if err != nil {
 		return nil, err
 	}
-	m.conns = append(m.conns, conn.GenConn(newconn, m.datapath))
+	m.conns = append(m.conns, conn.GenConn(newconn, m.datadir))
 	log.Println("Generated destination for address:", i2paddr.Base32(), "at position", len(m.conns)-1)
 	return m.conns[len(m.conns)-1].SAMConn, nil
 }
@@ -50,11 +53,16 @@ func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, erro
 	return m.DialI2P(ctx, addr)
 }
 
-func NewManager() (*Manager, error) {
-	return NewManagerFromOptions()
+func NewManager(samhost, samport, samopts, datadir string) (*Manager, error) {
+	return NewManagerFromOptions(
+		SetHost(samhost),
+		SetPort(samport),
+		SetSAMOpts(samopts),
+		SetDataDir(datadir),
+	)
 }
 
-func NewManagerFromOptions() (*Manager, error) {
+func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 	var m Manager
 	if r, err := resolver.NewResolver(); err == nil {
 		m.Config = socks5.Config{

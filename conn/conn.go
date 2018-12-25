@@ -19,5 +19,7 @@ func NewConn(conn *sam3.SAMConn, path string) (*Conn, error) {
 }
 
 func GenConn(conn *sam3.SAMConn, path string) *Conn {
-	return &Conn{SAMConn: conn, path: path}
+	var c = Conn{SAMConn: conn, path: path}
+	c.SaveKeys()
+	return &c
 }
