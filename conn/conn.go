@@ -91,7 +91,8 @@ func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	var err error
 	c.SAM = sam
 	c.path = path
-	c.name = addr + ".i2pkeys"
+	t32, err := sam3.NewI2PAddrFromString(addr)
+	c.name = t32.Base32() + ".i2pkeys"
 	c.I2PKeys, err = c.Keys()
 	if err != nil {
 		return nil, err
