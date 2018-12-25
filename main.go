@@ -138,7 +138,14 @@ func main() {
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-	if tunsocks, tunerr := tunmanager.NewManager(config.SamHost, config.SamPort, config.SaveDirectory, config.Print()); tunerr == nil {
+	if tunsocks, tunerr := tunmanager.NewManager(
+		config.TargetHost,
+		config.TargetPort,
+		config.SamHost,
+		config.SamPort,
+		config.SaveDirectory,
+		config.Print(),
+	); tunerr == nil {
 		go func() {
 			for sig := range c {
 				if sig == os.Interrupt {

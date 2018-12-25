@@ -71,8 +71,10 @@ func (m Manager) Cleanup() error {
 	return m.SAM.Close()
 }
 
-func NewManager(samhost, samport, datadir string, samopts []string) (*Manager, error) {
+func NewManager(host, port, samhost, samport, datadir string, samopts []string) (*Manager, error) {
 	return NewManagerFromOptions(
+		SetSocksHost(host),
+		SetSocksPort(port),
 		SetHost(samhost),
 		SetPort(samport),
 		SetDataDir(datadir),

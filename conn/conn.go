@@ -2,8 +2,12 @@ package conn
 
 import (
 	"bufio"
-	"github.com/eyedeekay/sam3"
 	"os"
+	"path/filepath"
+)
+
+import (
+	"github.com/eyedeekay/sam3"
 )
 
 type Conn struct {
@@ -12,10 +16,22 @@ type Conn struct {
 	*sam3.StreamSession
 	*sam3.SAMConn
 	path string
+	name string
 }
 
 func (c Conn) FindKeys() bool {
-	return false
+	if _, err := os.Stat(c.Path()); os.IsNotExist(err) {
+		if _, err := os.Stat(c.path); os.IsNotExist(err) {
+			os.MkdirAll(c.path, os.ModeDir)
+		}
+		return false
+	}
+	return true
+}
+
+func (c Conn) Path() string {
+	p := filepath.Join(c.path, c.name)
+	return p
 }
 
 func (c Conn) SaveKeys() (sam3.I2PKeys, error) {
@@ -24,7 +40,7 @@ func (c Conn) SaveKeys() (sam3.I2PKeys, error) {
 	if err != nil {
 		return sam3.I2PKeys{}, err
 	}
-	f, err := os.Create(c.path)
+	f, err := os.Create(c.Path())
 	if err != nil {
 		return sam3.I2PKeys{}, err
 	}
@@ -39,7 +55,17 @@ func (c Conn) SaveKeys() (sam3.I2PKeys, error) {
 }
 
 func (c Conn) LoadKeys() (sam3.I2PKeys, error) {
-	//sam3.LoadKeysIncompat(filereader)
+	var err error
+	f, err := os.Open(c.Path())
+	if err != nil {
+		return sam3.I2PKeys{}, err
+	}
+	defer f.Close()
+	filereader := bufio.NewReader(f)
+	c.I2PKeys, err = sam3.LoadKeysIncompat(filereader)
+	if err != nil {
+		return sam3.I2PKeys{}, err
+	}
 	return c.I2PKeys, nil
 }
 
@@ -64,7 +90,8 @@ func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	var c Conn
 	var err error
 	c.SAM = sam
-	c.path = path + addr + ".i2pkeys"
+	c.path = path
+	c.name = addr + ".i2pkeys"
 	c.I2PKeys, err = c.Keys()
 	if err != nil {
 		return nil, err

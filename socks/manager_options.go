@@ -39,6 +39,29 @@ func SetPort(v string) func(*Manager) error {
 	}
 }
 
+//SetSocksHost sets the host of the client's SAM bridge
+func SetHost(s string) func(*Manager) error {
+	return func(c *Manager) error {
+		c.host = s
+		return nil
+	}
+}
+
+//SetSocksPort sets the port of the client's SAM bridge
+func SetPort(v string) func(*Manager) error {
+	return func(c *Manager) error {
+		port, err := strconv.Atoi(v)
+		if err != nil {
+			return fmt.Errorf("Invalid port; non-number.")
+		}
+		if port < 65536 && port > -1 {
+			c.port = v
+			return nil
+		}
+		return fmt.Errorf("Invalid port.")
+	}
+}
+
 //SetSAMOpts sets the SAM options
 func SetSAMOpts(s []string) func(*Manager) error {
 	return func(c *Manager) error {
