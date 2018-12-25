@@ -150,7 +150,7 @@ func main() {
 			for sig := range c {
 				if sig == os.Interrupt {
 					if err := tunsocks.Cleanup(); err != nil {
-						log.Println(err.Error())
+						panic(err)
 					}
 				}
 			}
