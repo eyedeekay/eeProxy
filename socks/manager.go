@@ -20,12 +20,21 @@ type Manager struct {
 	*sam3.SAM
 	conns   []*conn.Conn
 	datadir string
+	host    string
+	port    string
 	samhost string
 	samport string
 	samopts []string
 }
 
 func (m Manager) Serve() error {
+	server, err := socks5.New(conf)
+	if err != nil {
+		return err
+	}
+	if err := server.ListenAndServe("tcp", m.host+":"+m.port); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -76,6 +85,8 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 	m.samhost = "127.0.0.1"
 	m.samport = "7656"
 	m.datadir = "./tunnels/"
+	m.host = "127.0.0.1"
+	m.port = "7950"
 	for _, o := range opts {
 		if err := o(&m); err != nil {
 			return nil, err

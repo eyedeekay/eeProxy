@@ -148,7 +148,9 @@ func main() {
 				}
 			}
 		}()
-		tunsocks.Serve()
+		if err := tunsocks.Serve(); err != nil {
+			log.Println(err.Error())
+		}
 	} else {
 		panic(tunerr)
 	}
