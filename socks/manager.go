@@ -10,6 +10,7 @@ import (
 import (
 	"github.com/eyedeekay/eeproxy/conn"
 	"github.com/eyedeekay/eeproxy/resolve"
+	"github.com/eyedeekay/eeproxy/rewriter"
 	"github.com/eyedeekay/go-socks5"
 	"github.com/eyedeekay/sam3"
 )
@@ -105,6 +106,7 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 		m.Config = socks5.Config{
 			Resolver: r,
 			Dial:     m.Dial,
+			Rewriter: NewRewriter(),
 		}
 		return &m, nil
 	}
