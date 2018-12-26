@@ -31,6 +31,9 @@ type Manager struct {
 }
 
 func (m Manager) Serve() error {
+	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
+		return nil, err
+	}
 	if err := m.server.Serve(m.listen); err != nil {
 		return err
 	}
@@ -114,9 +117,6 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 	}
 	m.server, err = socks5.New(&m.Config)
 	if err != nil {
-		return nil, err
-	}
-	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
 		return nil, err
 	}
 	return nil, fmt.Errorf("Resolver creation error.")
