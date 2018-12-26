@@ -59,6 +59,7 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 }
 
 func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, error) {
+	log.Println("Dialing:", network, addr)
 	return m.DialI2P(ctx, addr)
 }
 

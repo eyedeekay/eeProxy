@@ -23,6 +23,7 @@ clean:
 
 deps:
 	go get -u github.com/eyedeekay/eeproxy
+	go get -u github.com/eyedeekay/go-socks5
 
 test:
 	mkdir -p testdir && cd testdir && \

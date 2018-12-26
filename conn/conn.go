@@ -2,6 +2,7 @@ package conn
 
 import (
 	"bufio"
+	"math/rand"
 	"os"
 	"path/filepath"
 )
@@ -97,7 +98,7 @@ func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.StreamSession, err = sam.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10], c.I2PKeys, opts)
+	c.StreamSession, err = sam.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10]+RandTunName(), c.I2PKeys, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -110,4 +111,13 @@ func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 		return nil, err
 	}
 	return &c, nil
+}
+
+// RandTunName generates a random tunnel names to avoid collisions
+func RandTunName() string {
+	b := make([]byte, 12)
+	for i := range b {
+		b[i] = "abcdefghijklmnopqrstuvwxyz"[rand.Intn(len("abcdefghijklmnopqrstuvwxyz"))]
+	}
+	return string(b)
 }
