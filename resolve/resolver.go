@@ -26,11 +26,11 @@ func (r Resolver) Resolve(ctx context.Context, name string) (context.Context, ne
 
 func (r Resolver) ResolveI2P(ctx context.Context, name string) (context.Context, *sam3.I2PAddr, error) {
 	if !r.ValidateI2PAddr(name) {
-		return ctx, nil, fmt.Errorf("Error, not an allowed suffix")
+		return ctx, &sam3.I2PAddr{}, fmt.Errorf("Error, not an allowed suffix")
 	}
 	raddr, err := r.SAMResolver.Resolve(name)
 	if err != nil {
-		return ctx, nil, err
+		return ctx, &sam3.I2PAddr{}, err
 	}
 	return ctx, &raddr, nil
 }
