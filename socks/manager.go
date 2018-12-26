@@ -34,7 +34,7 @@ func (m Manager) Serve() error {
 	var err error
 	m.server, err = socks5.New(&m.Config)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	m.listen, err = net.Listen("tcp", m.host+":"+m.port)
 	if err != nil {
