@@ -2,6 +2,7 @@ package conn
 
 import (
 	"bufio"
+	"log"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -78,9 +79,11 @@ func (c Conn) Keys() (sam3.I2PKeys, error) {
 }
 
 func (m Conn) Cleanup() error {
+	log.Println("Cleaning up client connection.", m.name)
 	if err := m.SAMConn.Close(); err != nil {
 		return err
 	}
+	log.Println("Cleaning up client session.", m.name)
 	if err := m.StreamSession.Close(); err != nil {
 		return err
 	}

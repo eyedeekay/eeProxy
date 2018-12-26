@@ -66,11 +66,13 @@ func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, erro
 }
 
 func (m Manager) Cleanup() error {
+	log.Println("Initiating cleanup.")
 	for _, c := range m.conns {
 		if err := c.Cleanup(); err != nil {
 			return err
 		}
 	}
+	log.Println("Finished cleanup.")
 	return nil
 }
 
