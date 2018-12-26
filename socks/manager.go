@@ -10,7 +10,7 @@ import (
 import (
 	"github.com/eyedeekay/eeproxy/conn"
 	"github.com/eyedeekay/eeproxy/resolve"
-	"github.com/eyedeekay/eeproxy/rewriter"
+	//"github.com/eyedeekay/eeproxy/rewriter"
 	"github.com/eyedeekay/go-socks5"
 	"github.com/eyedeekay/sam3"
 )
