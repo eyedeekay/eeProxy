@@ -32,12 +32,17 @@ type Manager struct {
 
 func (m Manager) Serve() error {
 	var err error
-	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
+	m.server, err = socks5.New(&m.Config)
+	if err != nil {
+		return nil, err
+	}
+	m.listen, err = net.Listen("tcp", m.host+":"+m.port)
+	if err != nil {
 		return err
-	} else {
-		if err := m.server.Serve(m.listen); err != nil {
-			return err
-		}
+	}
+
+	if err := m.server.Serve(m.listen); err != nil {
+		return err
 	}
 	return nil
 }
@@ -116,10 +121,6 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 			Rewriter: rewriter.NewRewriter(),
 		}
 		return &m, nil
-	}
-	m.server, err = socks5.New(&m.Config)
-	if err != nil {
-		return nil, err
 	}
 	return nil, fmt.Errorf("Resolver creation error.")
 }
