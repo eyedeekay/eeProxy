@@ -37,7 +37,7 @@ func (m Manager) Serve() error {
 	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
 		return err
 	}
-	if err := server.Serve(listen); err != nil {
+	if err := server.Serve(m.listen); err != nil {
 		return err
 	}
 	return nil
@@ -61,7 +61,7 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 	}
 	m.conns = append(m.conns, newconn)
 	log.Println("Generated destination for address:", i2paddr.Base32(), "at position", len(m.conns)-1)
-	return &m.conns[len(m.conns)-1].SAMConn, nil
+	return m.conns[len(m.conns)-1].SAMConn, nil
 }
 
 func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, error) {
