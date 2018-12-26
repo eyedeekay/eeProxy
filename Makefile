@@ -29,3 +29,8 @@ test:
 	mkdir -p testdir && cd testdir && \
 		../eeProxy
 
+kill:
+	killall -9 eeProxy
+
+fire:
+	curl --socks5 127.0.0.1:7950 http://i2p-projekt.i2p
