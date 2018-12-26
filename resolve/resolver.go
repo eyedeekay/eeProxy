@@ -23,7 +23,7 @@ func (r Resolver) Resolve(ctx context.Context, name string) (context.Context, ne
 	return r.ResolveI2P(ctx, name)
 }
 
-func (r Resolver) ResolveI2P(ctx context.Context, name string) (context.Context, *sam3.I2PAddr, error) {
+func (r Resolver) ResolveI2P(ctx context.Context, name string) (context.Context, *sam3.I2PDestHash, error) {
 	if !r.ValidateI2PAddr(name) {
 		return ctx, nil, fmt.Errorf("Error, not an allowed suffix")
 	}
@@ -31,7 +31,8 @@ func (r Resolver) ResolveI2P(ctx context.Context, name string) (context.Context,
 	if err != nil {
 		return ctx, nil, err
 	}
-	return ctx, &raddr, nil
+	v := raddr.DestHash()
+	return ctx, &v, nil
 }
 
 func (r Resolver) Cleanup() error {
