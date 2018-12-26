@@ -20,6 +20,7 @@ type Resolver struct {
 }
 
 func (r Resolver) Resolve(ctx context.Context, name string) (context.Context, net.Addr, error) {
+	log.Println("Resolving:", name)
 	return r.ResolveI2P(ctx, name)
 }
 
