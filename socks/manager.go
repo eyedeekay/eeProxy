@@ -18,7 +18,6 @@ import (
 type Manager struct {
 	resolver.Resolver
 	socks5.Config
-	*sam3.SAM
 	conns   []*conn.Conn
 	datadir string
 	host    string
@@ -51,7 +50,7 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 		}
 	}
 	log.Println("Creating a new connection in connection tree.", m.datadir)
-	newconn, err := conn.NewConn(*m.SAM, addr, m.datadir, m.samopts)
+	newconn, err := conn.NewConn(m.samhost, m.samport, addr, m.datadir, m.samopts)
 	if err != nil {
 		return nil, err
 	}
@@ -98,11 +97,6 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 		}
 	}
 	log.Println("preparing SAM-multiplexing SOCKS proxy on", m.host, m.port, "->", m.samhost, m.samport)
-	var err error
-	m.SAM, err = sam3.NewSAM(m.samhost + ":" + m.samport)
-	if err != nil {
-		return nil, err
-	}
 	if r, err := resolver.NewResolver(m.samhost, m.samport); err == nil {
 		m.Config = socks5.Config{
 			Resolver: r,

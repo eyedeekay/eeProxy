@@ -87,10 +87,13 @@ func (m Conn) Cleanup() error {
 	return nil
 }
 
-func NewConn(sam sam3.SAM, addr, path string, opts []string) (*Conn, error) {
+func NewConn(samhost, samport, addr, path string, opts []string) (*Conn, error) {
 	var c Conn
 	var err error
-	c.SAM = &sam
+	c.SAM, err = sam3.NewSAM(samhost + ":" + samport)
+	if err != nil {
+		return nil, err
+	}
 	c.path = path
 	t32, err := sam3.NewI2PAddrFromString(addr)
 	c.name = t32.Base32() + ".i2pkeys"
@@ -98,11 +101,11 @@ func NewConn(sam sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.StreamSession, err = sam.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10]+RandTunName(), c.I2PKeys, opts)
+	c.StreamSession, err = c.SAM.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10]+RandTunName(), c.I2PKeys, opts)
 	if err != nil {
 		return nil, err
 	}
-	i2paddr, err := sam.Lookup(addr)
+	i2paddr, err := c.SAM.Lookup(addr)
 	if err != nil {
 		return nil, err
 	}
