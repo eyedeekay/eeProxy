@@ -18,7 +18,7 @@ func (r Rewriter) Rewrite(ctx context.Context, request *socks5.Request) (context
 	return ctx, addr
 }
 
-func NewRewriter() Rewriter {
+func NewRewriter() *Rewriter {
 	var r Rewriter
 	return &r
 }
