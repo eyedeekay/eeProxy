@@ -19,7 +19,7 @@ type Manager struct {
 	resolver.Resolver
 	socks5.Config
 	*sam3.SAM
-	conns   []*conn.Conn
+	conns   []conn.Conn
 	datadir string
 	host    string
 	port    string
@@ -57,7 +57,7 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 	}
 	m.conns = append(m.conns, newconn)
 	log.Println("Generated destination for address:", i2paddr.Base32(), "at position", len(m.conns)-1)
-	return m.conns[len(m.conns)-1].SAMConn, nil
+	return &m.conns[len(m.conns)-1].SAMConn, nil
 }
 
 func (m Manager) Dial(ctx context.Context, network, addr string) (net.Conn, error) {

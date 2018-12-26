@@ -90,7 +90,7 @@ func (m Conn) Cleanup() error {
 	return nil
 }
 
-func NewConn(sam sam3.SAM, addr, path string, opts []string) (*Conn, error) {
+func NewConn(sam sam3.SAM, addr, path string, opts []string) (Conn, error) {
 	var c Conn
 	var err error
 	c.SAM = &sam
@@ -113,7 +113,7 @@ func NewConn(sam sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &c, nil
+	return c, nil
 }
 
 // RandTunName generates a random tunnel names to avoid collisions
