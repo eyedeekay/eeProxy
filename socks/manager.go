@@ -34,9 +34,10 @@ func (m Manager) Serve() error {
 	var err error
 	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
 		return err
-	}
-	if err := m.server.Serve(m.listen); err != nil {
-		return err
+	} else {
+		if err := m.server.Serve(m.listen); err != nil {
+			return err
+		}
 	}
 	return nil
 }
