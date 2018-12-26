@@ -106,7 +106,7 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 		m.Config = socks5.Config{
 			Resolver: r,
 			Dial:     m.Dial,
-			Rewriter: NewRewriter(),
+			Rewriter: rewriter.NewRewriter(),
 		}
 		return &m, nil
 	}
