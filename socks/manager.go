@@ -10,7 +10,7 @@ import (
 import (
 	"github.com/eyedeekay/eeproxy/conn"
 	"github.com/eyedeekay/eeproxy/resolve"
-	//"github.com/eyedeekay/eeproxy/rewriter"
+	"github.com/eyedeekay/eeproxy/rewriter"
 	"github.com/eyedeekay/go-socks5"
 	"github.com/eyedeekay/sam3"
 )
@@ -51,7 +51,7 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 		}
 	}
 	log.Println("Creating a new connection in connection tree.", m.datadir)
-	newconn, err := conn.NewConn(m.SAM, addr, m.datadir, m.samopts)
+	newconn, err := conn.NewConn(*m.SAM, addr, m.datadir, m.samopts)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 		m.Config = socks5.Config{
 			Resolver: r,
 			Dial:     m.Dial,
-			//Rewriter: rewriter.NewRewriter(),
+			Rewriter: rewriter.NewRewriter(),
 		}
 		return &m, nil
 	}

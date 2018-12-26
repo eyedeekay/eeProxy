@@ -87,10 +87,10 @@ func (m Conn) Cleanup() error {
 	return nil
 }
 
-func NewConn(sam *sam3.SAM, addr, path string, opts []string) (*Conn, error) {
+func NewConn(sam sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	var c Conn
 	var err error
-	c.SAM = sam
+	c.SAM = &sam
 	c.path = path
 	t32, err := sam3.NewI2PAddrFromString(addr)
 	c.name = t32.Base32() + ".i2pkeys"
