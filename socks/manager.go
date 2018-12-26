@@ -50,6 +50,7 @@ func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error
 			return c.SAMConn, nil
 		}
 	}
+	log.Println("Creating a new connection in connection tree.", datadir)
 	newconn, err := conn.NewConn(m.SAM, addr, m.datadir, m.samopts)
 	if err != nil {
 		return nil, err
