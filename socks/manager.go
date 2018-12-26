@@ -20,7 +20,8 @@ type Manager struct {
 	socks5.Config
 	*sam3.SAM
 	listen  net.Listener
-	conns   []conn.Conn
+	server  *socks5.Server
+	conns   []*conn.Conn
 	datadir string
 	host    string
 	port    string
@@ -30,14 +31,7 @@ type Manager struct {
 }
 
 func (m Manager) Serve() error {
-	server, err := socks5.New(&m.Config)
-	if err != nil {
-		return err
-	}
-	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
-		return err
-	}
-	if err := server.Serve(m.listen); err != nil {
+	if err := m.server.Serve(m.listen); err != nil {
 		return err
 	}
 	return nil
@@ -59,7 +53,7 @@ func (m *Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, erro
 	if err != nil {
 		return nil, err
 	}
-	m.conns = append(m.conns, newconn)
+	m.conns = append(m.conns, &newconn)
 	log.Println("Generated destination for address:", i2paddr.Base32(), "at position", len(m.conns)-1)
 	return m.conns[len(m.conns)-1].SAMConn, nil
 }
@@ -117,6 +111,13 @@ func NewManagerFromOptions(opts ...func(*Manager) error) (*Manager, error) {
 			Rewriter: rewriter.NewRewriter(),
 		}
 		return &m, nil
+	}
+	m.server, err = socks5.New(&m.Config)
+	if err != nil {
+		return nil, err
+	}
+	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
+		return nil, err
 	}
 	return nil, fmt.Errorf("Resolver creation error.")
 }

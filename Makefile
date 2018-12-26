@@ -35,3 +35,9 @@ kill:
 fire:
 	\/usr/bin/curl --socks5-hostname 127.0.0.1:7950 http://i2p-projekt.i2p --output i2p-projekt.html
 	\/usr/bin/curl --socks5-hostname 127.0.0.1:7950 http://inr.i2p --output inr.html
+
+tb:
+	go build ./conn
+	go build ./socks
+	go build ./rewriter
+	go build ./resolve
