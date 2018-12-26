@@ -99,19 +99,19 @@ func NewConn(sam sam3.SAM, addr, path string, opts []string) (Conn, error) {
 	c.name = t32.Base32() + ".i2pkeys"
 	c.I2PKeys, err = c.Keys()
 	if err != nil {
-		return nil, err
+		return Conn{}, err
 	}
 	c.StreamSession, err = c.SAM.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10]+"-"+RandTunName(), c.I2PKeys, opts)
 	if err != nil {
-		return nil, err
+		return Conn{}, err
 	}
 	i2paddr, err := c.SAM.Lookup(addr)
 	if err != nil {
-		return nil, err
+		return Conn{}, err
 	}
 	c.SAMConn, err = c.StreamSession.DialI2P(i2paddr)
 	if err != nil {
-		return nil, err
+		return Conn{}, err
 	}
 	return c, nil
 }
