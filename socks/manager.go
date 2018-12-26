@@ -33,7 +33,7 @@ type Manager struct {
 func (m Manager) Serve() error {
 	var err error
 	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
-		return nil, err
+		return err
 	}
 	if err := m.server.Serve(m.listen); err != nil {
 		return err
