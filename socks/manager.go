@@ -19,6 +19,7 @@ type Manager struct {
 	resolver.Resolver
 	socks5.Config
 	*sam3.SAM
+	listen  net.Listener
 	conns   []conn.Conn
 	datadir string
 	host    string
@@ -33,11 +34,10 @@ func (m Manager) Serve() error {
 	if err != nil {
 		return err
 	}
-	var listen net.Listener
-	if err := net.Listen("tcp", m.host+":"+m.port); err != nil {
+	if m.listen, err = net.Listen("tcp", m.host+":"+m.port); err != nil {
 		return err
 	}
-	if err := server.ListenAndServe(listen); err != nil {
+	if err := server.Serve(listen); err != nil {
 		return err
 	}
 	return nil
@@ -77,6 +77,7 @@ func (m Manager) Cleanup() error {
 		}
 	}
 	log.Println("Finished cleanup.")
+	m.listen.Close()
 	return nil
 }
 
