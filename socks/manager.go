@@ -43,7 +43,7 @@ func (m Manager) Serve() error {
 	return nil
 }
 
-func (m Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error) {
+func (m *Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error) {
 	i2paddr, err := sam3.NewI2PAddrFromString(addr)
 	if err != nil {
 		return nil, err
