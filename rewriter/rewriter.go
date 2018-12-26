@@ -2,6 +2,7 @@ package rewriter
 
 import (
 	"context"
+	"log"
 )
 import (
 	"github.com/eyedeekay/go-socks5"
