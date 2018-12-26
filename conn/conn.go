@@ -101,7 +101,7 @@ func NewConn(sam sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.StreamSession, err = c.SAM.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10]+RandTunName(), c.I2PKeys, opts)
+	c.StreamSession, err = c.SAM.NewStreamSession(c.I2PKeys.Addr().Base32()[0:10]+"-"+RandTunName(), c.I2PKeys, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func NewConn(sam sam3.SAM, addr, path string, opts []string) (*Conn, error) {
 
 // RandTunName generates a random tunnel names to avoid collisions
 func RandTunName() string {
-	b := make([]byte, 12)
+	b := make([]byte, 4)
 	for i := range b {
 		b[i] = "abcdefghijklmnopqrstuvwxyz"[rand.Intn(len("abcdefghijklmnopqrstuvwxyz"))]
 	}

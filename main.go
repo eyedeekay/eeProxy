@@ -149,9 +149,8 @@ func main() {
 		go func() {
 			for sig := range c {
 				if sig == os.Interrupt {
-					if err := tunsocks.Cleanup(); err != nil {
-						panic(err)
-					}
+					tunsocks.Cleanup()
+					panic(err)
 				}
 			}
 		}()
