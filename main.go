@@ -9,7 +9,8 @@ import (
 )
 
 import (
-	"github.com/eyedeekay/eeproxy/socks"
+	//"github.com/eyedeekay/eeproxy/socks"
+    "./socks"
 	"github.com/eyedeekay/sam-forwarder/config"
 )
 

@@ -21,7 +21,7 @@ type Manager struct {
 	*sam3.SAM
 	listen  net.Listener
 	server  *socks5.Server
-	conns   []*conn.Conn
+	conns   []conn.Conn
 	datadir string
 	host    string
 	port    string
@@ -47,6 +47,17 @@ func (m Manager) Serve() error {
 	return nil
 }
 
+func (m *Manager) generateConnection(addr string) error {
+    log.Println("Creating a new connection in connection tree.", m.datadir)
+	newconn, err := conn.NewConn(*m.SAM, addr, m.datadir, m.samopts)
+	if err != nil {
+		return err
+	}
+	m.conns = append(m.conns, newconn)
+    log.Println("Connection created.")
+    return nil
+}
+
 func (m *Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, error) {
 	i2paddr, err := sam3.NewI2PAddrFromString(addr)
 	if err != nil {
@@ -58,12 +69,10 @@ func (m *Manager) DialI2P(ctx context.Context, addr string) (*sam3.SAMConn, erro
 			return c.SAMConn, nil
 		}
 	}
-	log.Println("Creating a new connection in connection tree.", m.datadir)
-	newconn, err := conn.NewConn(*m.SAM, addr, m.datadir, m.samopts)
-	if err != nil {
+    err = m.generateConnection(addr)
+    if err != nil {
 		return nil, err
 	}
-	m.conns = append(m.conns, &newconn)
 	log.Println("Generated destination for address:", i2paddr.Base32(), "at position", len(m.conns)-1)
 	return m.conns[len(m.conns)-1].SAMConn, nil
 }
