@@ -41,3 +41,6 @@ tb:
 	go build ./socks
 	go build ./rewriter
 	go build ./resolve
+
+firefox:
+	firefox --profile ./profile.i2p http://inr.i2p

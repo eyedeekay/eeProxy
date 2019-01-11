@@ -18,7 +18,7 @@ func (r Rewriter) Rewrite(ctx context.Context, request *socks5.Request) (context
 	switch request.DestAddr.ADDR.(type) {
 	case *sam3.I2PAddr:
 		addr = request.DestAddr
-		addr.FQDN = request.DestAddr.ADDR.(*sam3.I2PAddr).Base32()
+		//addr.FQDN = request.DestAddr.ADDR.(*sam3.I2PAddr).Base32()
 		log.Println("Correcting FQDN to base32 address.", addr.FQDN)
 	default:
 		log.Println(request.DestAddr.String())
