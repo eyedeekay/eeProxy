@@ -43,4 +43,5 @@ tb:
 	go build ./resolve
 
 firefox:
-	firefox --profile ./profile.i2p http://inr.i2p
+	rm -rf ./testdir/profile.i2p && cp -rv ./profile.i2p ./testdir/profile.i2p
+	firefox --profile ./testdir/profile.i2p http://inr.i2p
